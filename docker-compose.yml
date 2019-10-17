@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  nb:
+    build: .
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/code
+      - .container-bash-history:/root/.bash_history
