@@ -6,7 +6,9 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - .:/code
-      - .julia:/root/.julia
-      - .container-bash-history:/root/.bash_history
+      - .:/code:delegated
+      # NOTE: perf is super bad, and 'delegated' does NOT help (macOS)
+      # -> unhosted volume? -> https://docs.docker.com/storage/
+      # - .julia:/root/.julia:delegated
+      - .container-bash-history:/root/.bash_history:delegated
     command: jupyter lab --ip=0.0.0.0 --allow-root
