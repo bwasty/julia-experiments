@@ -7,4 +7,6 @@ services:
       - "8888:8888"
     volumes:
       - .:/code
+      - .julia:/root/.julia
       - .container-bash-history:/root/.bash_history
+    command: jupyter lab --ip=0.0.0.0 --allow-root
