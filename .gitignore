@@ -1,3 +1,4 @@
 .ipynb_checkpoints
 .container-bash-history
 .julia
+*.tar.gz

@@ -3,12 +3,15 @@ FROM julia:1.2.0-buster
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip
-RUN pip3 install jupyterlab
+RUN pip3 install jupyterlab sympy
 
-# NOTE: multiple packages at once: Pkg.add(["a", "b"])
-RUN julia -e 'using Pkg; Pkg.add("IJulia")'
-# RUN julia -e 'using Pkg; Pkg.add("IJulia")'
-# TODO: package-compiler?
+# TODO: precompile: remove .API. for Julia 1.3
+RUN julia -e 'using Pkg; \
+    Pkg.add(["IJulia", "Plots", "PlotlyJS", "SymPy"]); \
+    Pkg.API.precompile()'
+
+# TODO!: unroot
+VOLUME /root/.julia
 
 WORKDIR /code
 
