@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
@@ -13,6 +14,12 @@
 #     name: julia-1.2
 # ---
 
+# +
+using Dates
+
+module M
+using Dates
+
 @enum State begin
     TooEarly #white
     Early #blue
@@ -23,11 +30,15 @@
     TooLate #black
 end
 
-# +
-using Dates
-
-module M
-using Dates
+emojis = [
+    ['⚪', '💜', '🥚'], 
+    ['🔵', '💙', '📘'], 
+    ['🟢', '💚', '📗'], 
+    ['🟡', '💛', '🌕', '📔', '📒'], 
+    ['🟠', '🧡', '📙'], 
+    ['🔴','❤', '♥', '🛑', '📕'], 
+    ['⚫', '🖤'],
+]
 
 BasePeriod = Minute
 #BasePeriod = Second # for testing
@@ -82,15 +93,59 @@ function start(timer::FuzzyTimer)
     timer.start = now()
 end
 
-function state(timer::FuzzyTimer)
-    show(42)
+function state(timer::FuzzyTimer, now=now())::State
+    @assert timer.start !== nothing
+    elapsed = now - timer.start
+    if elapsed < timer.early
+        TooEarly
+    elseif elapsed < timer.good
+        Early
+    elseif elapsed < timer.okay
+        Good
+    elseif elapsed < timer.late
+        Okay
+    elseif elapsed < timer.latest
+        Late
+    elseif elapsed < timer.too_late
+        Latest
+    else
+        TooLate
+    end
+end
+
+function remaining_in_state(timer::FuzzyTimer, now=now())::BasePeriod
+    @assert timer.start !== nothing
+    elapsed = round(now - timer.start, BasePeriod)
+    if elapsed < timer.early
+        timer.early - elapsed
+    elseif elapsed < timer.good
+        timer.good - elapsed
+    elseif elapsed < timer.okay
+        timer.okay - elapsed
+    elseif elapsed < timer.late
+        timer.late - elapsed
+    elseif elapsed < timer.latest
+        timer.latest - elapsed
+    elseif elapsed < timer.too_late
+        timer.too_late - elapsed
+    else
+        BasePeriod(0)
+    end
 end
 
 end
 
 t = M.FuzzyTimer(Minute(60), Hour(2))
+display(t)
 t2 = M.FuzzyTimer(Time(11), Time(12))
-t, t2
+#t, t2
+M.start(t)
+M.state(t) |> display
+M.state(t, now() + Minute(50)) |> display
+M.state(t, now() + Minute(60)) |> display
+M.state(t, now() + Minute(100)) |> display
+
+M.remaining_in_state(t, now() + Minute(61))
 # -
 
 M.start(t)
@@ -99,6 +154,6 @@ M.state(t)
 
 methods(FuzzyTimer)
 
-t2
+TooEarly
 
 
