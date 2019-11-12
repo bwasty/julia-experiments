@@ -139,21 +139,25 @@ t = M.FuzzyTimer(Minute(60), Hour(2))
 display(t)
 t2 = M.FuzzyTimer(Time(11), Time(12))
 #t, t2
-M.start(t)
-M.state(t) |> display
-M.state(t, now() + Minute(50)) |> display
-M.state(t, now() + Minute(60)) |> display
-M.state(t, now() + Minute(100)) |> display
+# M.start(t)
+# M.state(t) |> display
+# M.state(t, now() + Minute(50)) |> display
+# M.state(t, now() + Minute(60)) |> display
+# M.state(t, now() + Minute(100)) |> display
 
-M.remaining_in_state(t, now() + Minute(61))
+# M.remaining_in_state(t, now() + Minute(61))
 # -
 
-M.start(t)
+using Plots
 
-M.state(t)
+gr()
 
-methods(FuzzyTimer)
+?bar
 
-TooEarly
+bar([1,2,3],[4,5,6],fillcolor=[:red,:green,:blue],fillalpha=[0.2,0.4,0.6], orientation=:horizontal, bar_position=:overlay)
+
+bar([(1,4),(2,5),(3,6)])
+
+using StatsPlots
 
 
